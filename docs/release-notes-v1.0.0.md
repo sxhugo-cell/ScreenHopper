@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/sxhugo-cell/ScreenHopper/main/docs/media/release-banner.jpg" alt="Screen Hopper 1.0.0" width="100%">
+  <img src="https://github.com/sxhugo-cell/ScreenHopper/raw/main/docs/media/release-banner.jpg" alt="Screen Hopper 1.0.0" width="100%">
 </p>
 
 <h3 align="center">One mouse. Four computers.</h3>
@@ -19,7 +19,7 @@
 ## ✨ What you get
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/sxhugo-cell/ScreenHopper/main/docs/media/features.jpg" alt="Edge hopping, keyboard, clipboard and files" width="100%">
+  <img src="https://github.com/sxhugo-cell/ScreenHopper/raw/main/docs/media/features.jpg" alt="Edge hopping, keyboard, clipboard and files" width="100%">
 </p>
 
 - 🖱️ **Edge hopping:** arrange your screens to match your desk and push off any shared edge. It even hops between two other computers.
@@ -37,7 +37,7 @@
 4. Push the cursor off the edge.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/sxhugo-cell/ScreenHopper/main/docs/media/computers.jpg" alt="The Computers tab with the pairing key" width="90%">
+  <img src="https://github.com/sxhugo-cell/ScreenHopper/raw/main/docs/media/computers.jpg" alt="The Computers tab with the pairing key" width="90%">
 </p>
 
 > **Honest status:** macOS is the most tested. The Windows, Linux and Android builds are newer and have seen less real-world use, so expect rough edges and please report them.
