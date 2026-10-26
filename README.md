@@ -11,6 +11,9 @@
 **Push your cursor off the edge of a screen and it hops to the next computer.**<br>
 Mouse, keyboard, clipboard and files. All on your own network.
 
+A free, open-source **software KVM**: share one mouse and keyboard across multiple computers.<br>
+A Synergy, Barrier and Input Leap alternative, built with Rust and Tauri.
+
 <br>
 
 [![Version](https://img.shields.io/badge/version-1.0.0-14a37f?style=for-the-badge)](#what-it-does)
