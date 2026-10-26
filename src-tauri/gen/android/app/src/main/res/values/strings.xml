@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">"Screen Hopper"</string>
+    <string name="main_activity_title">"Screen Hopper"</string>
+    <string name="a11y_description">Lets another computer\'s mouse and keyboard control this phone: a pointer on screen, taps, scrolling, Back and Home, and typing into the focused text field. Screen Hopper only acts on input you send from your own computers.</string>
+</resources>

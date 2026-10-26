@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Screen Hopper</title>
+<link rel="stylesheet" href="style.css">
+<script>if (/Android/.test(navigator.userAgent)) document.documentElement.classList.add("android"); else if (/Mac/.test(navigator.platform)) document.documentElement.classList.add("mac"); else if (/Win/.test(navigator.platform)) document.documentElement.classList.add("windows"); else if (/Linux/.test(navigator.platform)) document.documentElement.classList.add("linux");</script>
+</head>
+<body>
+<div class="pop">
+  <div class="notch"></div>
+
+  <!-- ============ left: browse and configure ============ -->
+  <section class="left">
+    <nav class="rail">
+      <span class="railLogo" title="Screen Hopper"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="9" height="7" rx="2"/><rect x="13" y="5" width="9" height="7" rx="2"/><path d="M10 12v8l2.6-2.2 1.6 3 1.6-.9-1.5-2.8H18z" fill="currentColor"/></svg></span>
+      <button data-tab="devices" class="active" title="Computers"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+      <button data-tab="layout" title="Layout"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="10" height="8" rx="1.6"/><rect x="11" y="12" width="10" height="8" rx="1.6"/></svg></button>
+      <button data-tab="files" title="Files"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></button>
+      <button data-tab="settings" title="Settings"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+      <div class="railFoot">
+        <span id="ver" class="ver">-</span>
+        <button id="quitBtn" class="quit" title="Quit Screen Hopper"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg></button>
+      </div>
+    </nav>
+
+    <div class="leftMain">
+      <div class="topbar">
+        <label class="search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="peerSearch" placeholder="Search computers"></label>
+        <button id="pinBtn" class="iconBtn" title="Keep this window open"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 6 3 3H7l3-3z"/><path d="M12 13v7"/></svg></button>
+      </div>
+      <div class="scroll">
+    <div id="permBanner" class="banner hidden">
+      <div>
+        <span id="permText"><b>Permission needed.</b> Screen Hopper needs <b>Accessibility</b> and <b>Input Monitoring</b> to share your mouse and keyboard.
+        Open System Settings → Privacy &amp; Security and switch Screen Hopper on in both, then restart the app.</span>
+      </div>
+      <div class="col"><button id="permBtn">Ask macOS</button><button id="permAcc" class="ghost">Open Accessibility</button><button id="permInp" class="ghost">Open Input Monitoring</button></div>
+    </div>
+
+    <!-- Computers -->
+    <section id="tab-devices" class="tab active">
+      <div class="h2row"><h2>Computers</h2><button id="clearOffline" class="danger small hidden">Clear offline</button></div>
+      <div id="peerList" class="list"></div>
+
+      <div class="card code-card">
+        <div>
+          <div class="label">Your pairing key</div>
+          <div class="code" id="code">----</div>
+          <p class="muted">Enter this same key on every computer you want to join. Computers on the same network find each other automatically.</p>
+        </div>
+        <div class="col">
+          <button id="copyCode">Copy</button>
+          <button id="newCode" class="ghost">New key</button>
+        </div>
+      </div>
+
+      <details class="card">
+        <summary>Can’t see a computer? Connect by IP</summary>
+        <div class="row">
+          <input id="ipInput" placeholder="e.g. 192.168.1.20">
+          <button id="ipBtn">Connect</button>
+        </div>
+        <p class="muted" id="ipHelp"></p>
+        <p class="error" id="ipErr"></p>
+      </details>
+
+      <details class="card">
+        <summary>Activity log</summary>
+        <div id="log" class="log"></div>
+      </details>
+    </section>
+
+    <!-- Layout -->
+    <section id="tab-layout" class="tab">
+      <h2 class="tabTitle">Layout</h2>
+      <p class="muted">Drag each computer’s screens to match your desk, like Windows display settings. Screens snap to each other’s edges. Push the cursor off any shared edge and it hops, even between two other computers. One layout is shared by every computer, so you only need to arrange it once.</p>
+      <div class="card"><div id="stage" class="stage"></div></div>
+          </section>
+
+    <!-- Files -->
+    <section id="tab-files" class="tab">
+      <h2 class="tabTitle">Files</h2>
+      <div class="card">
+        <div class="row">
+          <label class="label" for="filePeer">Send to</label>
+          <select id="filePeer"></select>
+          <button id="pickFiles">Choose files…</button>
+          <button id="pickFolder" class="ghost">Choose folder…</button>
+        </div>
+        <div id="drop" class="drop">Drop files or folders here</div>
+        <div class="row android-only"><button id="sendClip" class="ghost" type="button">Send this phone’s clipboard to the other computers</button></div>
+        <p class="muted android-only">Android only lets an app read the clipboard while it is open, so copy something, open Screen Hopper, and it is sent automatically. Text from your computers lands on this phone’s clipboard at once.</p>
+        <div id="xferBar" class="bar hidden"><div id="xferFill"></div><span id="xferText"></span></div>
+      </div>
+      <div class="card">
+        <div class="label">Received files go to</div>
+        <div class="row"><code id="recvDir"></code><button id="openRecv" class="ghost">Open folder</button></div>
+        <p class="muted">Tip: copy files in Finder or Explorer on one computer and paste on another. Files copy over the network the moment you hit copy.</p>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section id="tab-settings" class="tab">
+      <h2 class="tabTitle">Settings</h2>
+      <div class="card android-only" id="kbdCard">
+        <div class="label">Typing from your computer</div>
+        <p class="muted" id="kbdState"></p>
+        <p class="muted">Android only lets a keyboard app type into web pages and every other app. Turn on <b>Screen Hopper Keyboard</b>, then choose it whenever a computer is typing on this phone. It shows a small bar with a button to get your normal keyboard back.</p>
+        <div class="row"><button id="kbdEnable" class="ghost" type="button">Turn on in Settings</button><button id="kbdPick" type="button">Choose keyboard</button></div>
+      </div>
+      <div class="card form">
+        <label>Computer name <input id="sName"></label>
+        <label>Pairing code <input id="sCode"></label>
+        <label class="check"><input type="checkbox" id="sLogin"> Start Screen Hopper when I log in (menu-bar app)</label>
+        <div class="hk">
+          <label class="check"><input type="checkbox" id="sHkOn"> Pause and resume with a shortcut</label>
+          <div class="row"><button id="hkBox" class="hkbox" type="button">Ctrl + Alt + P</button><span class="muted" id="hkHint">Click to change. Press a shortcut, or tap one key twice.</span></div>
+        </div>
+        <label class="check"><input type="checkbox" id="sSwap"> Swap Cmd and Ctrl between Mac and Windows (so Cmd+C and Ctrl+C both copy)</label>
+        <label class="check"><input type="checkbox" id="sRevHere"> Reverse the scroll wheel on <b>this</b> computer while another computer controls it</label>
+        <label class="check"><input type="checkbox" id="sClip"> Sync clipboard (text, rich text, images)</label>
+        <label class="check"><input type="checkbox" id="sClipFiles"> Sync copied files</label>
+        <label class="check"><input type="checkbox" id="sFiles"> Allow file transfer</label>
+        <label class="check"><input type="checkbox" id="sDim"> Dim this screen while another computer is in control</label>
+        <label>Dimming strength <input type="range" id="sDimLevel" min="10" max="90"></label>
+        <label>Receive folder <input id="sDir"></label>
+        <p class="muted">Switches apply instantly. Text fields need Save.</p>
+        <div class="row"><button id="saveBtn">Save</button><button id="logBtn" class="ghost">Open log folder</button><span id="saved" class="ok"></span></div>
+        <p class="muted">All traffic is encrypted end to end (Noise protocol, keyed by your pairing code) and never leaves your local network.</p>
+      </div>
+    </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ right: connection status ============ -->
+  <aside class="right">
+    <div class="rtop">
+      <div>
+        <h1 id="heroTitle">Starting…</h1>
+        <p id="heroSub" class="rmuted"></p>
+      </div>
+      <button id="power" class="power wait" aria-label="Pause or resume hopping">
+        <span class="ring r1"></span><span class="ring r2"></span>
+        <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="9" height="7" rx="2"/><rect x="13" y="5" width="9" height="7" rx="2"/><path d="M10 12v8l2.6-2.2 1.6 3 1.6-.9-1.5-2.8H18z" fill="currentColor"/></svg>
+      </button>
+    </div>
+
+    <div class="rstats">
+      <div><b id="connTime">--:--:--</b><span>Connected for</span></div>
+      <div class="end"><b id="ipShown">-</b><span>This computer</span></div>
+      <div><b id="statMode">This computer</b><span>In control</span></div>
+      <div class="end"><b>Noise · ChaCha20</b><span>Encryption</span></div>
+      <div><b id="statClip">Synced</b><span>Clipboard</span></div>
+    </div>
+    <p class="rmuted small" id="keyStat"></p>
+    <div id="statusPill" class="pill">Starting…</div>
+    <button id="reclaimBtn" class="rghost hidden">Return control here</button>
+
+    <div class="rbottom">
+      <div class="target">
+        <span class="flag" id="tFlag">💻</span>
+        <div class="grow"><div class="tname" id="tName">No computer yet</div><div class="tsub" id="tSub">Searching…</div></div>
+      </div>
+      <div class="actions">
+        <button id="offlineBtn" class="rbtn outline">Disconnect</button>
+        <button id="pauseBtn" class="rbtn fill">Pause</button>
+      </div>
+      <div class="rhint">Panic hotkey <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Shift</kbd><kbd>Esc</kbd></div>
+    </div>
+  </aside>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

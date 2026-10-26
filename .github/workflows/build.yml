@@ -1,0 +1,53 @@
+name: Build Screen Hopper
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            args: ""
+            name: windows
+          - os: macos-latest
+            args: "--target universal-apple-darwin"
+            name: macos
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.os == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: npm install
+      # Test binaries on Windows lack the Common Controls manifest Tauri needs (0xc0000139), so unit tests run on macOS only.
+      - run: cargo test --lib
+        if: matrix.name == 'macos'
+        working-directory: src-tauri
+      - run: npx tauri build ${{ matrix.args }}
+      - name: Upload Windows installers
+        if: matrix.name == 'windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ScreenHopper-Windows
+          path: |
+            src-tauri/target/release/bundle/nsis/*.exe
+            src-tauri/target/release/bundle/msi/*.msi
+      - name: Upload macOS installer
+        if: matrix.name == 'macos'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ScreenHopper-macOS
+          path: |
+            src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg

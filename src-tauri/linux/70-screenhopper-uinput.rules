@@ -1,0 +1,2 @@
+# Screen Hopper: let the logged-in user create its virtual mouse and keyboard (so other computers can control this one).
+KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput"

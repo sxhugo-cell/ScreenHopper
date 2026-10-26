@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Screen Hopper: one mouse, four computers</title>
+<meta name="description" content="Push your cursor off the edge of a screen and it hops to the next computer. Mouse, keyboard, clipboard and files across Mac, Windows, Linux and Android.">
+<meta property="og:title" content="Screen Hopper">
+<meta property="og:description" content="One mouse. Four computers.">
+<meta property="og:image" content="media/poster.jpg">
+<link rel="icon" href="../src-tauri/icons/32x32.png">
+<style>
+:root{--bg:#0f161d;--bg2:#18222d;--card:#222e3b;--line:#2c3a49;--ink:#eef4f8;--muted:#9db0c2;--green:#14a37f;--mint:#34d399;--teal:#1fb7ad;--light:#eef2f5;--dark:#14202b;
+--font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,Roboto,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.5;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(15,22,29,.72);border-bottom:1px solid rgba(44,58,73,.6)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.01em}
+.brand img{width:30px;height:30px;border-radius:8px}
+nav .links{display:flex;gap:26px;font-size:15px;color:var(--muted)}
+nav .links a:hover{color:var(--ink)}
+.btn{display:inline-block;padding:12px 24px;border-radius:14px;font-weight:700;font-size:16px;background:linear-gradient(135deg,var(--green),#0f8667);color:#fff;box-shadow:0 10px 30px rgba(20,163,127,.35);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(20,163,127,.5)}
+.btn.ghost{background:transparent;border:2px solid var(--line);box-shadow:none;color:var(--ink)}
+.btn.ghost:hover{border-color:var(--green)}
+/* hero */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 60px;overflow:hidden;text-align:center}
+.hero::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 30% 20%,rgba(20,163,127,.28),transparent 45%),radial-gradient(circle at 75% 70%,rgba(31,183,173,.2),transparent 45%);animation:drift 14s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(4%,3%) scale(1.08)}}
+.hero>*{position:relative}
+.eyebrow{display:inline-block;font-size:14px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);padding:8px 18px;border-radius:30px;margin-bottom:28px}
+h1{font-size:clamp(46px,9vw,118px);line-height:.98;letter-spacing:-.045em;font-weight:900}
+h1 .g{background:linear-gradient(90deg,var(--mint),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:680px;margin:28px auto 0;font-size:clamp(18px,2.2vw,24px);color:var(--muted)}
+.cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:38px}
+/* hopping stage */
+.stage{position:relative;max-width:980px;height:220px;margin:70px auto 0;width:100%}
+.scr{position:absolute;top:30px;width:21%;aspect-ratio:16/10;border-radius:14px;background:#1b2733;padding:6px;border:2px solid var(--line);opacity:.55;animation:lit 8s infinite}
+.scr i{display:block;width:100%;height:100%;border-radius:8px}
+.scr b{position:absolute;left:0;right:0;bottom:-34px;font-size:15px;font-weight:700;color:var(--muted)}
+.s1{left:0}.s2{left:26.3%}.s3{left:52.6%}.s4{right:0}
+.s1 i{background:linear-gradient(135deg,#cdeee6,#e6f1f8)}
+.s2 i{background:linear-gradient(135deg,#2f7fd1,#78b6f0)}
+.s3 i{background:linear-gradient(160deg,#1c2b3a,#33495f)}
+.s4 i{background:linear-gradient(135deg,#7b3f8f,#e0793a)}
+.s1{animation-delay:0s}.s2{animation-delay:2s}.s3{animation-delay:4s}.s4{animation-delay:6s}
+@keyframes lit{0%,24%{opacity:1;border-color:var(--green);box-shadow:0 0 50px rgba(20,163,127,.5);transform:translateY(-6px)}28%,100%{opacity:.55;border-color:var(--line);box-shadow:none;transform:none}}
+.cursor{position:absolute;top:60px;left:6%;width:42px;z-index:5;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5));animation:hop 8s infinite cubic-bezier(.6,0,.3,1)}
+@keyframes hop{0%,22%{left:8%;top:70px}28%{top:20px}32%,47%{left:34.5%;top:70px}53%{top:20px}57%,72%{left:60.5%;top:70px}78%{top:20px}82%,96%{left:86%;top:70px}100%{left:8%;top:70px}}
+/* sections */
+section{padding:120px 0;position:relative}
+h2{font-size:clamp(34px,5.5vw,64px);line-height:1.05;letter-spacing:-.035em;font-weight:900;text-align:center}
+.sub{max-width:640px;margin:18px auto 0;text-align:center;color:var(--muted);font-size:20px}
+.light{background:var(--light);color:var(--dark)}
+.light .sub{color:#5d6b78}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+/* video */
+.video{max-width:1000px;margin:56px auto 0;border-radius:28px;overflow:hidden;border:2px solid var(--line);box-shadow:0 40px 100px rgba(0,0,0,.55),0 0 120px rgba(20,163,127,.18)}
+.video video{display:block;width:100%;height:auto;background:#000}
+/* features */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:64px}
+.f{background:#fff;border:2px solid #e2e8ee;border-radius:28px;padding:34px;transition:transform .3s,box-shadow .3s}
+.f:hover{transform:translateY(-8px);box-shadow:0 26px 60px rgba(20,32,43,.16)}
+.f .ic{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-size:30px;background:rgba(20,163,127,.12);margin-bottom:20px}
+.f h3{font-size:24px;letter-spacing:-.02em;margin-bottom:8px}
+.f p{color:#5d6b78;font-size:17px}
+.tag{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:rgba(217,154,28,.18);color:#8a5d09;border-radius:8px;padding:3px 8px;margin-left:6px;vertical-align:middle}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:64px;counter-reset:s}
+.st{background:var(--bg2);border:1px solid var(--line);border-radius:26px;padding:30px;counter-increment:s}
+.st::before{content:counter(s);display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--teal));font-weight:900;font-size:22px;margin-bottom:18px}
+.st h3{font-size:21px;margin-bottom:6px}.st p{color:var(--muted);font-size:16px}
+.shot{max-width:1000px;margin:64px auto 0;border-radius:24px;overflow:hidden;border:2px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.shot img{display:block;width:100%;height:auto}
+/* platforms */
+.plats{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:64px}
+.p{background:#fff;border:2px solid #e2e8ee;border-radius:28px;padding:32px;text-align:center}
+.p .big{font-size:54px;margin-bottom:10px}.p h3{font-size:24px}.p p{color:#5d6b78;margin-top:8px;font-size:16px}
+.note{max-width:760px;margin:40px auto 0;text-align:center;color:#5d6b78;font-size:17px;background:#fff;border:2px dashed #cfd9e2;border-radius:20px;padding:18px 24px}
+/* privacy */
+.priv{text-align:center}
+.lock{font-size:90px;filter:drop-shadow(0 0 40px rgba(52,211,153,.5))}
+.chips{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+.chips span{border:2px solid var(--line);border-radius:30px;padding:10px 20px;font-weight:700;color:var(--muted)}
+/* build */
+pre{max-width:760px;margin:48px auto 0;background:#0b1117;border:1px solid var(--line);border-radius:20px;padding:26px 30px;font:500 17px/1.7 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#cfe3f2;overflow-x:auto}
+pre .c{color:#6f8396}
+footer{padding:56px 0;text-align:center;color:var(--muted);font-size:15px;border-top:1px solid var(--line)}
+footer a{color:var(--mint);text-decoration:underline}
+@media (max-width:900px){nav .links{display:none}.grid,.plats{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.grid,.plats,.steps{grid-template-columns:1fr}section{padding:80px 0}.stage{height:150px}.cursor{width:30px}.scr b{font-size:12px;bottom:-26px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><img src="../src-tauri/icons/64x64.png" alt="">Screen Hopper</a>
+  <div class="links"><a href="#video">Video</a><a href="#features">Features</a><a href="#how">How it works</a><a href="#platforms">Platforms</a><a href="#build">Build</a></div>
+  <a class="btn" href="#video" style="padding:9px 20px;font-size:15px">Watch</a>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+  <span class="eyebrow">Version 1.0.0</span>
+  <h1>One mouse.<br><span class="g">Four computers.</span></h1>
+  <p class="lead">Push your cursor off the edge of a screen and it hops to the next computer. Keyboard, clipboard and files come along.</p>
+  <div class="cta"><a class="btn" href="#video">Watch the 21 second tour</a><a class="btn ghost" href="#how">How it works</a></div>
+
+  <div class="stage" aria-hidden="true">
+    <div class="scr s1"><i></i><b>Mac</b></div>
+    <div class="scr s2"><i></i><b>Windows</b></div>
+    <div class="scr s3"><i></i><b>Android</b></div>
+    <div class="scr s4"><i></i><b>Linux</b></div>
+    <svg class="cursor" viewBox="0 0 32 34"><path d="M3 2 L3 26 L9.5 20.2 L13.8 30.5 L18.2 28.6 L14 18.6 L22.5 18.6 Z" fill="#14202b" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/></svg>
+  </div>
+</div></header>
+
+<section id="video"><div class="wrap">
+  <h2 class="reveal">See it hop.</h2>
+  <p class="sub reveal">Twenty-one seconds, with sound.</p>
+  <div class="video reveal"><video controls preload="metadata" poster="media/poster.jpg" playsinline><source src="media/screen-hopper.mp4" type="video/mp4">Your browser can't play this video. <a href="media/screen-hopper.mp4">Download it</a>.</video></div>
+</div></section>
+
+<section class="light" id="features"><div class="wrap">
+  <h2 class="reveal">Everything follows your cursor.</h2>
+  <p class="sub reveal">Not just the mouse.</p>
+  <div class="grid">
+    <div class="f reveal"><div class="ic">🖱️</div><h3>Edge hopping</h3><p>Drag your screens in Layout to match your desk. Push off any shared edge and it hops, even between two other computers.</p></div>
+    <div class="f reveal"><div class="ic">⌨️</div><h3>Keyboard follows</h3><p>Type on whichever computer the cursor is on. Swap Cmd and Ctrl between Mac and Windows so both copy shortcuts work.</p></div>
+    <div class="f reveal"><div class="ic">📋</div><h3>Shared clipboard</h3><p>Text, rich text and images. Copy on one, paste on another. Copied files travel too.</p></div>
+    <div class="f reveal"><div class="ic">📁</div><h3>File transfer</h3><p>Drop files or folders onto a computer. Received files land in the folder you choose.</p></div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <h2 class="reveal">Set up in four steps.</h2>
+  <div class="steps">
+    <div class="st reveal"><h3>Install</h3><p>Put Screen Hopper on each computer and open it.</p></div>
+    <div class="st reveal"><h3>Same key</h3><p>Enter the same pairing key everywhere. Computers on the same network find each other.</p></div>
+    <div class="st reveal"><h3>Arrange</h3><p>Drag the screens in Layout to match your desk.</p></div>
+    <div class="st reveal"><h3>Hop</h3><p>Push the cursor off an edge. That's it.</p></div>
+  </div>
+  <div class="shot reveal"><img src="media/computers.jpg" alt="The Computers tab with the pairing key and three connected computers" loading="lazy"></div>
+</div></section>
+
+<section class="light" id="platforms"><div class="wrap">
+  <h2 class="reveal">Mac. Windows. Linux. Android.</h2>
+  <div class="plats">
+    <div class="p reveal"><div class="big">🍎</div><h3>macOS</h3><p>Menu-bar app. Full control both ways.</p></div>
+    <div class="p reveal"><div class="big">🪟</div><h3>Windows</h3><p>Installer. Full control both ways.</p></div>
+    <div class="p reveal"><div class="big">🐧</div><h3>Linux</h3><p>Wayland: GNOME 46+ and KDE Plasma 6.1+.</p></div>
+    <div class="p reveal"><div class="big">🤖</div><h3>Android</h3><p>Your mouse and keyboard hop onto the phone or tablet.</p></div>
+  </div>
+  <p class="note reveal">macOS is the most tested. The Windows, Linux and Android builds are newer and have seen less real-world use.</p>
+</div></section>
+
+<section class="priv"><div class="wrap">
+  <div class="lock reveal">🔒</div>
+  <h2 class="reveal">Stays on your network.</h2>
+  <p class="sub reveal">Everything is encrypted end to end and never leaves your local network. No account, no cloud, no server.</p>
+  <div class="chips reveal"><span>Noise protocol</span><span>ChaCha20-Poly1305</span><span>Keyed by your pairing code</span><span>LAN only</span></div>
+</div></section>
+
+<section id="build"><div class="wrap">
+  <h2 class="reveal">Build it yourself.</h2>
+  <p class="sub reveal">Rust, Tauri 2 and a plain HTML interface.</p>
+<pre class="reveal"><span class="c"># needs Rust and Node 20+</span>
+git clone https://github.com/sxhugo-cell/ScreenHopper.git
+cd ScreenHopper
+npm install
+npx tauri dev      <span class="c"># run it</span>
+npx tauri build    <span class="c"># build an installer</span></pre>
+</div></section>
+
+<footer><div class="wrap">
+  <p>Screen Hopper 1.0.0 · <a href="../README.md">README</a> · <a href="../LINUX.md">Linux</a> · <a href="../ANDROID.md">Android</a></p>
+</div></footer>
+
+<script>
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+  els.forEach(function(e,i){e.style.transitionDelay=(i%3)*80+'ms';io.observe(e)});
+})();
+</script>
+</body>
+</html>
