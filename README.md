@@ -124,4 +124,10 @@ Everything is encrypted end to end and never leaves your local network. No accou
 
 More detail: [Linux](LINUX.md) · [Android](ANDROID.md)
 
+---
+
+## License
+
+MIT. Free to use, change and share. See [LICENSE](LICENSE).
+
 <div align="center"><br><sub>Screen Hopper 1.0.0</sub></div>
